@@ -1,0 +1,47 @@
+<?php
+
+use Intexsoft\CartRule\Block\CheckRuleName;
+
+$check = new CheckRuleName;
+
+if(!in_array("n% off over N", $check->getCatalogPriceRuleProductIds())){
+    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+
+    $sp_storeManager = $objectManager->create('\Magento\Store\Model\StoreManagerInterface');
+    $website_id = $sp_storeManager->getStore()->getWebsiteId();
+
+    $simple_action = 'by_percent'; //or $simple_action = 'by_fixed';
+    $free_shipping = '1'; //or $free_shipping = '0';
+
+    $sp_customerGroup = $objectManager->create('\Magento\Customer\Model\ResourceModel\Group\Collection');
+
+    $customerGroups = $sp_customerGroup->toOptionHash();
+
+    foreach (array_keys($customerGroups) as $key) {
+    $customerGroup[] = $key;
+    }
+    $model = $objectManager->create('Magento\SalesRule\Model\Rule');
+    $data['name'] = "n% off over N";
+    $data['discount_amount'] = '10';
+    $data['description'] = 'User will get n% off on purchase of N or more';
+    $data['from_date'] = '';
+    $data['to_date'] = '';
+    $data['simple_action'] = '';
+    $data['website_ids'] = array($website_id);
+    $data['customer_group_ids'] = [0];
+    $data['is_active'] = '1';
+    $data['use_auto_generation'] = '0';
+    $data['uses_per_customer'] = '1';
+    $data['uses_per_coupon'] = '0';
+    $data['is_advanced'] = '1';
+    $data['sort_order'] = '1';
+    $data['discount_qty'] = '0';
+    $data['simple_free_shipping'] = $free_shipping;
+    $data['is_rss'] = '0';
+    $data['apply_to_shipping'] = '0';
+    $data['times_used'] = '0';
+    $data['conditions']['1'] = array('type' => 'Magento\SalesRule\Model\Rule\Condition\Combine','aggregator' => 'all','value' => '1','new_child' => '');
+    $data['conditions']['1--1'] = array('type' => 'Magento\SalesRule\Model\Rule\Condition\Address','attribute' => 'base_subtotal','operator' => '>=','value' => 100);
+    $model->loadPost($data);
+    $model->save();
+}

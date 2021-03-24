@@ -1,0 +1,55 @@
+<?php
+
+use Intexsoft\CartRule\Block\CheckRuleName;
+use Magento\Framework\App\ObjectManager;
+use Magento\Framework\DataObject;
+
+$check = new CheckRuleName;
+if(!in_array("cartDiscount", $check->getCatalogPriceRuleProductIds())){
+    $objectManager = ObjectManager::getInstance();
+    $model =  $objectManager->create('Magento\CatalogRule\Model\Rule');
+    $model->setName('cartDiscount')
+        ->setDescription('description')
+        ->setIsActive(1)
+        ->setCustomerGroupIds(array(0,1))
+        ->setWebsiteIds(array(1))
+        ->setFromDate('')
+        ->setToDate('')
+        ->setSimpleAction('by_fixed')
+        ->setDiscountAmount(10)
+        ->setStopRulesProcessing(0);
+
+    $conditions = array();
+    $conditions["1"] = array
+    (
+        "type" => "Magento\CatalogRule\Model\Rule\Condition\Combine",
+        "aggregator" => "all",
+        "value" => 1,
+        "new_child" => ""
+    );
+
+    $model->setData('conditions',$conditions);
+
+    // Validating rule data before Saving
+    $validateResult = $model->validateData(new DataObject($model->getData()));
+    if ($validateResult !== true) {
+        foreach ($validateResult as $errorMessage) {
+            echo $errorMessage;
+        }
+        return;
+    }
+
+    try {
+        $model->loadPost($model->getData());
+        $model->save();
+
+        $ruleJob = $objectManager->get('Magento\CatalogRule\Model\Rule\Job');
+        $ruleJob->applyAll();
+        echo "rule created";
+    } catch (Exception $e) {
+        echo $e->getMessage();
+    }
+}
+else{
+    echo "Hey";
+}

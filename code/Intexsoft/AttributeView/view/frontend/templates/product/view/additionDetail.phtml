@@ -1,0 +1,22 @@
+<?php
+/** @var $block \Magento\Catalog\Block\Product\View */
+?>
+<?php
+    $_product = $block->getProduct();
+    $attribute_code = 'preinstalled_os';
+    $attribute_value = $_product->getResource()->getAttribute($attribute_code)->getFrontend()->getValue($_product);
+    if($attribute_value == "Yes"){
+?>
+    <a class="data switch"
+       tabindex="-1"
+       data-toggle="trigger"
+       href="#addition"
+       id="tab-label-addition-title">
+        addition
+    </a>
+    <div class="data item content" id="addition" aria-labelledby="tab-label-addition-title" data-role="content">
+        <p>Void</p>
+    </div>
+<?php
+    }
+?>

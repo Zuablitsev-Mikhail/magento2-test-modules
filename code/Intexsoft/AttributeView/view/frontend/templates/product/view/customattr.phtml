@@ -1,0 +1,17 @@
+<?php
+
+use Magento\Catalog\Block\Product\View;
+
+    /** @var  View $block*/
+?>
+<?php
+    $_product = $block->getProduct();
+    $attribute_code = 'preinstalled_os';
+    $attribute_value = $_product->getResource()->getAttribute($attribute_code)->getFrontend()->getValue($_product);
+    if($attribute_value == "Yes"){
+    ?>
+        <label for="pre-os"><input type="checkbox" id="pre-os" class="switch-checkbox" checked> Pre installed OS</label>
+    <?php
+    }
+?>
+<!--preinstalled_os-->

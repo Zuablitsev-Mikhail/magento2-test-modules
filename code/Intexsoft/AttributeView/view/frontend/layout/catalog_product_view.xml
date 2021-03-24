@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<page layout="1column" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <referenceContainer name="content">
+        <referenceContainer name="product.info.extrahint">
+            <container name="custom" htmlTag="div" htmlClass="custom" after="product.info.mailto">
+                <block class="Magento\Catalog\Block\Product\View" name="product.info.customattr" template="Intexsoft_AttributeView::product/view/customattr.phtml"/>
+            </container>
+        </referenceContainer>
+        <referenceBlock name="product.info.details">
+            <block class="Magento\Catalog\Block\Product\View\Description" name="product.info.additionDetail" template="Intexsoft_AttributeView::product/view/additionDetail.phtml" group="detailed_info" after="product.attributes">
+                <arguments>
+                    <argument name="title" translate="true" xsi:type="string">Addition</argument>
+                </arguments>
+            </block>
+        </referenceBlock>
+    </referenceContainer>
+</page>

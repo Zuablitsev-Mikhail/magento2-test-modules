@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page layout="3columns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+
+    <referenceContainer name="page.bottom.container">
+        <container name="page.cart.info" label="Before Page Footer" htmlTag="div" htmlClass="content">
+<!--            <block class="Magento\Framework\View\Element\Template" template="Intexsoft_CartRule::cart.phtml"/>-->
+            <block class="Magento\Framework\View\Element\Template" template="Intexsoft_CartRule::cart.phtml"/>
+            <block class="Magento\Framework\View\Element\Template" template="Intexsoft_CartRule::createCartRule.phtml"/>
+            <block class="Magento\Framework\View\Element\Template" template="Intexsoft_CartRule::update.phtml"/>
+<!--            <block class="Intexsoft\CartRule\Block\Cart\Totals" name="quote.print.totals" as="quote.print.totals" after="checkout.cart" template="Intexsoft_CartRule::subtotal.phtml"/>-->
+        </container>
+
+    </referenceContainer>
+</page>

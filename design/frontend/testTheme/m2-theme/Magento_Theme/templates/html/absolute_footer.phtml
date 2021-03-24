@@ -1,0 +1,44 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+?>
+<?="
+    <div class='ads'>
+        <div class='ads-text'>Advertising</div>
+        <button class='ads-button'>X</button>
+    </div>
+"?>
+<?= "
+    <script>
+        let ads = document.querySelector('.ads');
+        let ads_check = getCookie('ads');
+        window.onload = function (){
+            if(ads_check !== 'false'){
+                 ads.style.display = 'flex';
+            }
+        }
+        let ads_button = document.querySelector('.ads-button');
+        ads_button.onclick = function (){
+            document.cookie =  'ads = false; expires =';
+            ads.style.display = 'none';
+        }
+
+        function getCookie(cname) {
+          let name = cname + '=';
+          let ca = document.cookie.split(';');
+          for(let i = 0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) === ' ') {
+              c = c.substring(1);
+            }
+            if (c.indexOf(name) === 0) {
+              return c.substring(name.length, c.length);
+            }
+          }
+          return '';
+        }
+    </script>
+" ?>
+<?= /* @noEscape */ $block->getMiscellaneousHtml();
