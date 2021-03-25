@@ -1,8 +1,8 @@
 <?php
 
-use Intexsoft\CartRule\Block\CheckRuleName;
+use Intexsoft\CartRule\Block\RuleData;
 
-$check = new CheckRuleName;
+$check = new RuleData();
 
 if(!in_array("n% off over N", $check->getCatalogPriceRuleProductIds())){
     $objectManager = \Magento\Framework\App\ObjectManager::getInstance();

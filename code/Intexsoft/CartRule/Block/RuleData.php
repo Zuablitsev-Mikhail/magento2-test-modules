@@ -5,7 +5,7 @@ namespace Intexsoft\CartRule\Block;
 
 use Magento\Framework\App\ObjectManager;
 
-class CheckRuleName
+class RuleData
 {
     /**
      * @var mixed
@@ -40,21 +40,40 @@ class CheckRuleName
         }
         return $resultProductIds;
     }
+
+    /**
+     * @param string $name
+     * @return string
+     */
     public function _getConditionsSerialized(string $name){
+        $val = "";
         foreach ($this->cartRuleCollection as $cartRule) {
-            if($cartRule->getName() === $name) return $cartRule->getConditionsSerialized();
+            if($cartRule->getName() === $name) $val = $cartRule->getConditionsSerialized();
         }
-        return null;
+        return $val;
     }
+
+    /**
+     * @param string $name
+     * @return bool
+     */
     public function _getStatus(string $name){
+        $val = false;
         foreach ($this->cartRuleCollection as $cartRule) {
-            if($cartRule->getName() === $name) return $cartRule->getIsActive();
+            if($cartRule->getName() === $name) $val = $cartRule->getIsActive();
         }
+        return $val;
     }
+
+    /**
+     * @param string $name
+     * @return float
+     */
     public function _getDiscountAmount(string $name){
+        $val = 1;
         foreach ($this->cartRuleCollection as $cartRule) {
-            if($cartRule->getName() === $name)
-            $resultProductIds[] = $cartRule->getName();//name of rule
+            if($cartRule->getName() === $name) $val = $cartRule->getDiscountAmount();;
         }
+        return $val;
     }
 }

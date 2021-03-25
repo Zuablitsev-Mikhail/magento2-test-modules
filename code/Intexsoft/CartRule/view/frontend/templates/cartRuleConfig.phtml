@@ -1,0 +1,28 @@
+<?php
+
+use Intexsoft\CartRule\Block\RuleData;
+
+$check = new RuleData();
+$name = "n% off over N";
+
+?>
+<!--<script type="text/x-magento-init">-->
+<!--    {-->
+<!--       "*":-->
+<!--        {-->
+<!--            "Intexsoft_CartRule/js/swatch-renderer": {-->
+<!--                "ConditionsSerialized": --><?//=$check->_getConditionsSerialized($name)?><!--,-->
+<!--                "IsActive":  --><?//=$check->_getStatus($name)?><!--,-->
+<!--                "DiscountAmount":  --><?//=$check->_getDiscountAmount($name)?>
+<!--            }-->
+<!--        }-->
+<!--    }-->
+<!--</script>-->
+<?php
+    $json = json_decode($check->_getConditionsSerialized($name), true);
+?>
+<ul id="cartData" style="display: none">
+    <li id="ConditionsSerialized"><?=$json["conditions"][0]["value"]?></li>
+    <li id="IsActive"><?=$check->_getStatus($name)?></li>
+    <li id="DiscountAmount"><?=$check->_getDiscountAmount($name)?></li>
+</ul>
