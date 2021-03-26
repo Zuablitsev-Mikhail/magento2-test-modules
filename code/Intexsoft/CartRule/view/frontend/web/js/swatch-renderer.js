@@ -6,81 +6,70 @@ define(
     'use strict';
 
     return function (SwatchRenderer) {
-
-        // let discountAmount = SwatchRenderer.DiscountAmount;
-        // let status = SwatchRenderer.IsActive;
-        // let base_subtotal = SwatchRenderer.ConditionsSerialized.conditions[0].value;
-
         let discountAmount = document.querySelector("#DiscountAmount");
         let status = document.querySelector("#IsActive");
         let base_subtotal = document.querySelector("#ConditionsSerialized");
+        let cartTotal = document.querySelector(".content");
 
-        //TODO: If module enable
-        if (status.textContent !== "0"){
-            let cartTotal = document.querySelector(".content");
-            let toCart = document.querySelectorAll(".tocart");
-            let getJSON = function (url, callback) {
+        let getJSON = function (url, callback) {
 
-                let xhr = new XMLHttpRequest();
-                xhr.open('GET', url, true);
-                xhr.responseType = 'json';
-                xhr.onload = function () {
+            let xhr = new XMLHttpRequest();
+            xhr.open('GET', url, true);
+            xhr.responseType = 'json';
+            xhr.onload = function () {
 
-                    let status = xhr.status;
+                let status = xhr.status;
 
-                    if (status === 200) {
-                        callback(null, xhr.response);
-                    } else {
-                        callback(status);
-                    }
-                };
-
-                xhr.send();
+                if (status === 200) {
+                    callback(null, xhr.response);
+                } else {
+                    callback(status);
+                }
             };
-            var graph = document.createElement('div');
-            graph.id = "cart-info";
-            cartTotal.append(graph);
-            cartTotal = document.querySelector("#cart-info");
 
+            xhr.send();
+        };
 
-            $.widget('mage.SwatchRenderer', $['mage']['SwatchRenderer'], {
-                _init: function () {
-                    let $widget = this;
-                    this._getJsonCart();
-                    $("button").on('click', '.tocart', (e) => {
-                        this._getJsonCart();
-                    });
-                    $("#cart-info").bind("DOMSubtreeModified", function (e) {
-                        $widget._getJsonCart();
-                    });
-                    this._super();
-                },
-                /**
-                 * Get prices
-                 *
-                 * @param {Object} newPrices
-                 * @param {Object} displayPrices
-                 * @returns {*}
-                 * @private
-                 */
-                _getPrices: function (newPrices, displayPrices) {
-                    var $widget = this;
-                    let basePrice = displayPrices["baseOldPrice"].amount;
-                    if (_.isEmpty(newPrices)) {
-                        newPrices = $widget._getNewPrices();
+        var graph = document.createElement('div');
+        graph.id = "cart-info";
+        cartTotal.append(graph);
+        cartTotal = document.querySelector("#cart-info");
+
+        $.widget('mage.SwatchRenderer', $['mage']['SwatchRenderer'], {
+            _init: function () {
+                let $widget = this;
+                this._getJsonCart();
+                $(document).ajaxComplete(function () {
+                    $widget._getJsonCart();
+                });
+                this._super();
+            },
+            /**
+             * Get prices
+             *
+             * @param {Object} newPrices
+             * @param {Object} displayPrices
+             * @returns {*}
+             * @private
+             */
+            _getPrices: function (newPrices, displayPrices) {
+                var $widget = this;
+                let basePrice = displayPrices["baseOldPrice"].amount;
+                if (_.isEmpty(newPrices)) {
+                    newPrices = $widget._getNewPrices();
+                }
+                _.each(displayPrices, function (price, code) {
+                    if (newPrices[code]) {
+                        if (displayPrices[code].amount === basePrice
+                            && (cartTotal.textContent !== null && parseFloat(cartTotal.textContent) > parseFloat(base_subtotal.textContent))
+                            && status.textContent !== "0") {
+                            displayPrices[code].amount = newPrices[code].amount - displayPrices[code].amount - (displayPrices[code].amount * discountAmount.textContent) / 100;
+                        } else displayPrices[code].amount = newPrices[code].amount - displayPrices[code].amount;
                     }
-                    _.each(displayPrices, function (price, code) {
-                        if (newPrices[code]) {
-                            //TODO: add if enable and replace values
-                            if (displayPrices[code].amount === basePrice && (cartTotal.textContent !== null && parseFloat(cartTotal.textContent) > parseFloat(base_subtotal.textContent))) {
-                                displayPrices[code].amount = newPrices[code].amount - displayPrices[code].amount - (displayPrices[code].amount * discountAmount.textContent) / 100;
-                            } else displayPrices[code].amount = newPrices[code].amount - displayPrices[code].amount;
-                        }
-                    });
+                });
 
                     return displayPrices;
                 },
-                //TODO: dell this or add customize to price and clear
                 _UpdatePrice: function () {
                     var $widget = this,
                         $product = $widget.element.parents($widget.options.selectorProduct),
@@ -148,35 +137,7 @@ define(
                     });
                 },
 
-            });
-            $(window).load(function () {
-                // select the target node
-                let target = document.querySelector('.block-minicart');
-
-                // create an observer instance
-
-                function callback(mutations, observer) {
-                    for (let mutation of mutations)
-                        if (mutation.type === 'childList' && mutation.target === document.querySelector(".subtotal .price-wrapper")) {
-                            getJSON('http://bsh.loc/default/customer/section/load/?sections=cart', function (err, data) {
-                                if (err != null) {
-                                    console.error(err);
-                                } else {
-                                    cartTotal.textContent = `${data.cart.subtotalAmount}`;
-                                }
-                            });
-                        }
-                }
-
-                let observer = new MutationObserver(callback);
-
-                let config = {childList: true, characterData: true, subtree: true};
-                // pass in the target node, as well as the observer options
-                observer.observe(target, config);
-            });
-
-
-            return $['mage']['SwatchRenderer'];
-        }
+        });
+        return $['mage']['SwatchRenderer'];
     };
 });
