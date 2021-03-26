@@ -336,6 +336,7 @@ return [
         'Intexsoft_AttributeView' => 1,
         'Intexsoft_BestProduct' => 1,
         'Intexsoft_CartRule' => 1,
+        'Intexsoft_RelatedModule' => 1,
         'Klarna_Core' => 1,
         'Klarna_Ordermanagement' => 1,
         'Klarna_Kp' => 1,
