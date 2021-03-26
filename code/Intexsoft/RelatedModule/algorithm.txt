@@ -1,0 +1,10 @@
+save->
+    for($items){
+        bool_value = false;
+        if($item have parent)
+            while(!bool_value){
+                if($item not in list) this.relatedList.add($item)
+                if($item.parent exist) $item = $item.parent
+                else bool_value = true;
+            }
+    }
